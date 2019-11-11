@@ -114,7 +114,7 @@ demo();
 
 在举例子的时候其实想要重点说明 this 的默认绑定关系的，但是你会发现上面两种代码因为分别使用了 var、let 进行声明导致的结果也是不一样的，归其原因涉及到 **顶层对象的概念**
 
-在 [Issue: Nodejs-Roadmap/issues/11](https://github.com/Q-Angelo/Nodejs-Roadmap/issues/11) 里有童鞋提到这个疑问，也是之前的疏忽，再简单聊下顶层对象的概念，**顶层对象（浏览器环境指 window、Node.js 环境指 Global）的属性和全局变量属性的赋值是相等价的**，使用 var 和 function 声明的是顶层对象的属性，而 let 就属于 ES6 规范了，但是 ES6 规范中 let、const、class 这些声明的全局变量，不再属于顶层对象的属性。
+再简单聊下顶层对象的概念，**顶层对象（浏览器环境指 window、Node.js 环境指 Global）的属性和全局变量属性的赋值是相等价的**，使用 var 和 function 声明的是顶层对象的属性，而 let 就属于 ES6 规范了，但是 ES6 规范中 let、const、class 这些声明的全局变量，不再属于顶层对象的属性。
 
 **非严格模式下，在 node 环境中，不会将 a 绑定到 global，因此下面输出undefined**
 
@@ -183,7 +183,7 @@ parent.child(); // zhangsan
 
 * ```显示绑定``` 需要引用一个对象时进行强制绑定调用，js有提供call()、apply()方法，ES5中也提供了内置的方法 ```Function.prototype.bind```。
 
-call、apply这两个函数的第一个参数都是设置this对象，关于两个个函数的区别可以查看 [`[函数]` call和apply的使用与区别?](https://github.com/Q-Angelo/summarize/blob/master/javascript/base.md#call%E5%92%8Capply%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8E%E5%8C%BA%E5%88%AB)
+call、apply这两个函数的第一个参数都是设置this对象，关于两个个函数的区别可以查看 [`[函数]` call和apply的使用与区别?](https://www.jianshu.com/p/60f25d6571f0)
 
 
 ```js

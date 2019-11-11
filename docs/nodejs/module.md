@@ -1,4 +1,4 @@
-# 浅谈 Node.js 模块机制及常见面试问题解答
+# 浅谈 Node.js 模块机制及常见问题解答
 
 Node.js 模块机制采用了 Commonjs 规范，弥补了当前 JavaScript 开发大型应用没有标准的缺陷，类似于 Java 中的类文件，Python 中的 import 机制，Node.js 中可以通过 module.exports、require 来导出和引入一个模块.
 
@@ -162,7 +162,7 @@ a模块加载完毕: b.test值： 2
 
 ## 对象引用关系考察
 
-> 也许是面试考察最多的问题：module.exports 与 exports 的区别？
+> module.exports 与 exports 的区别？
 
 exports 相当于 module.exports 的快捷方式如下所示:
 

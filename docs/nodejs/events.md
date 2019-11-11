@@ -60,8 +60,16 @@ app.emit("koa");
 ### 系统模块自定义 EventEmitter 类的实现
 
 在这开始之前让我们先看下 Node.js 中的 Stream、Net 模块是怎么实现的？
+> 语法说明
+```properties
+    util.inherits()语法结构
+    util.inherits(constructor, superConstructor)
+    constructor：子类的构造函数
+    superConstructor：父类的构造函数
+```
 
 在 Stream 模块中的实现
+
 
 ```js
 // https://github.com/nodejs/node/blob/v10.x/lib/internal/streams/legacy.js#L6
@@ -420,4 +428,4 @@ test
 
 许多 Node.js 成功的模块和框架都是基于 EventEmitter 的，学会 EventEmitter 的使用，并且知道该在什么时候去使用是非常有用的。
 
-EventEmitter 本质上就是观察者模式的实现，一个类似的模式是发布/订阅，生产者将消息发布之后无需关心订阅者的实现，关注过**Nodejs技术栈**公众号的同学，也许你会收到过我之前发布的 RabbitMQ 系列文章，RabbitMQ 本身也是基于 AMQP 协议，这在一个分布式集群环境中使用也是非常好的一种方案。
+EventEmitter 本质上就是观察者模式的实现，一个类似的模式是发布/订阅，生产者将消息发布之后无需关心订阅者的实现，RabbitMQ 本身也是基于 AMQP 协议，这在一个分布式集群环境中使用也是非常好的一种方案。
