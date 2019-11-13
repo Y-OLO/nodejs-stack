@@ -75,7 +75,7 @@ TPS（TransactionPerSecond）指每秒事物处理量，每秒钟系统所能处
 
 ## ab压力测试
 
-ab 是 apachebench 命令的缩写，是 Apache 自带的压力测试工具。执行原理是创建多个并发访问线程，来模拟多用户对同一 URL 地址进行压力测试。
+[ab](https://github.com/doubaokun/node-ab) 是 apachebench 命令的缩写，是 Apache 自带的压力测试工具。执行原理是创建多个并发访问线程，来模拟多用户对同一 URL 地址进行压力测试。
 
 ### 安装指南
 
@@ -158,7 +158,7 @@ $ ab -n 100 -c 10 -t 30 https://www.baidu.com/
 ***注意:*** 如果 POST 请求需要先将请求体保存为一个文件，例如 order.txt 通过 -p 参数加载
 
 ```
-$ ab -c 200 -t 120 -T 'application/json' -p order.txt http://192.168.6.128:3000/v1/order
+$ ab -c 200 -t 120 -T 'application/json' -p order.txt http://192.168.168.131:3000/v1/order
 ```
 
 **POST 请求传递 Headers 示例**
@@ -166,24 +166,24 @@ $ ab -c 200 -t 120 -T 'application/json' -p order.txt http://192.168.6.128:3000/
 多个 header 参数使用多个 -H 传递，这块也是在使用过程中踩过的坑
 
 ```
-$ ab -c 200 -t 120 -T 'application/json' -H 'token: 123456' -H 'userId: 111'  -p order.txt http://192.168.6.128:3000/v1/order
+$ ab -c 200 -t 120 -T 'application/json' -H 'token: 123456' -H 'userId: 111'  -p order.txt http://192.168.168.131:3000/v1/order
 ```
 
 ### ab响应参数说明
 
 ```bash
-ab -c 200 -t 60 -T 'application/json' -p order.txt http://192.168.6.128:3000/v1/order
+ab -c 200 -t 60 -T 'application/json' -p order.txt http://192.168.168.131:3000/v1/order
 This is ApacheBench, Version 2.3 <$Revision: 1430300 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
 
-Benchmarking 192.168.6.128 (be patient)
+Benchmarking 192.168.168.131 (be patient)
 Completed 5000 requests
 Completed 10000 requests
 Finished 11435 requests
 
 Server Software:        
-Server Hostname:        192.168.6.128
+Server Hostname:        192.168.168.131
 Server Port:            300
 
 Document Path:          /?orderType=yongche

@@ -390,7 +390,7 @@ server.listen(3000);
 * Transfer rate:          3662.39 [Kbytes/sec] received
 
 ```
-$ ab -c 200 -t 60 http://192.168.6.131:3000/string
+$ ab -c 200 -t 60 http://192.168.168.131:3000/string
 ```
 
 ![](./img/ab_string.png)
@@ -404,7 +404,7 @@ $ ab -c 200 -t 60 http://192.168.6.131:3000/string
 * Transfer rate:          9138.82 [Kbytes/sec] received
 
 ```
-$ ab -c 200 -t 60 http://192.168.6.131:3000/buffer
+$ ab -c 200 -t 60 http://192.168.168.131:3000/buffer
 ```
 
 ![](./img/ab_buffer.png)
