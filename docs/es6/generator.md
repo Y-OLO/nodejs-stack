@@ -22,6 +22,8 @@
 ```
 
 > Generator就是一个遍历器生成函数，所以我们直接可以把它赋值Symbol.iterator,从而使这个对象也具备这个iterator接口
+
+
 ```javascript
  //Generator一种新的应用
  {
@@ -42,8 +44,9 @@
 ```
 
 > Generator最好是用在状态机，是JS编程中比较高级的用法，比如我们需要有a b c三种状态去描述一个事物，也就是这个事务只存在3种状态a-b b-c c-a 总之就是三种循环，永远跑不出第四种状态，用Generator函数去处理这种状态机是特别适用的
-```javascript
 
+
+```javascript
 {
   let state = function* (){
     while(1){
@@ -65,6 +68,7 @@
   },1000);
 }
 ```
+
 ```javascript
 {
   //async await这种写法并不是一种新的写法，只是Generator的一种语法糖
