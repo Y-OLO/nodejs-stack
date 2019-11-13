@@ -142,10 +142,10 @@ console.log(buf.toString('hex')); // 68656c6c6f20776f726c64
 这个相信不会陌生了，通过上面讲解的 Buffer.form() 实现，如果不传递 encoding 默认按照 UTF-8 格式转换存储
 
 ```js
-const buf = Buffer.from('Node.js 技术栈', 'UTF-8');
+const buf = Buffer.from('Node.js 技术栈 Buffer', 'UTF-8');
 
-console.log(buf); // <Buffer 4e 6f 64 65 2e 6a 73 20 e6 8a 80 e6 9c af e6 a0 88>
-console.log(buf.length); // 17
+console.log(buf); // <Buffer 4e 6f 64 65 2e 6a 73 20 e6 8a 80 e6 9c af e6 a0 88 20 42 75 66 66 65 72>
+console.log(buf.length); // 24
 ```
 
 **Buffer 转换为字符串**
@@ -153,10 +153,10 @@ console.log(buf.length); // 17
 Buffer 转换为字符串也很简单，使用 toString([encoding], [start], [end]) 方法，默认编码仍为 UTF-8，如果不传 start、end 可实现全部转换，传了 start、end 可实现部分转换（这里要小心了）
 
 ```js
-const buf = Buffer.from('Node.js 技术栈', 'UTF-8');
+const buf = Buffer.from('Node.js 技术栈 Buffer', 'UTF-8');
 
-console.log(buf); // <Buffer 4e 6f 64 65 2e 6a 73 20 e6 8a 80 e6 9c af e6 a0 88>
-console.log(buf.length); // 17
+console.log(buf); // <Buffer 4e 6f 64 65 2e 6a 73 20 e6 8a 80 e6 9c af e6 a0 88 20 42 75 66 66 65 72>
+console.log(buf.length); // 24
 console.log(buf.toString('UTF-8', 0, 9)); // Node.js �
 ```
 
@@ -170,10 +170,10 @@ console.log(buf.toString('UTF-8', 0, 9)); // Node.js �
 下面我们改下示例的截取范围：
 
 ```js
-const buf = Buffer.from('Node.js 技术栈', 'UTF-8');
+const buf = Buffer.from('Node.js 技术栈 Buffer', 'UTF-8');
 
-console.log(buf); // <Buffer 4e 6f 64 65 2e 6a 73 20 e6 8a 80 e6 9c af e6 a0 88>
-console.log(buf.length); // 17
+console.log(buf); // <Buffer 4e 6f 64 65 2e 6a 73 20 e6 8a 80 e6 9c af e6 a0 88 20 42 75 66 66 65 72>
+console.log(buf.length); // 24
 console.log(buf.toString('UTF-8', 0, 11)); // Node.js 技
 ```
 
