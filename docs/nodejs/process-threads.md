@@ -25,10 +25,10 @@
 
 进程（Process）是计算机中的程序关于某数据集合上的一次运行活动，是系统进行资源分配和调度的**基本单位**，是操作系统结构的基础，进程是线程的**容器**（来自百科）。我们启动一个服务、运行一个实例，就是开一个服务进程，例如 Java 里的 JVM 本身就是一个进程，Node.js 里通过 ```node app.js``` 开启一个服务进程，多进程就是进程的复制（fork），fork 出来的每个进程都拥有自己的独立空间地址、数据栈，一个进程无法访问另外一个进程里定义的变量、数据结构，只有建立了 IPC 通信，进程之间才可数据共享。
 
-> 关于进程通过一个简单的 Node.js Demo 来验证下，执行以下代码 ```node process.js```，开启一个服务进程
+> 关于进程通过一个简单的 Node.js Demo 来验证下，执行以下代码 ```node 1_create_process.js```，开启一个服务进程
 
 ```js
-// process.js
+// 1_create_process.js
 const http = require('http');
 
 http.createServer().listen(3000, () => {
@@ -59,7 +59,7 @@ Javascript 就是属于单线程，程序顺序执行，可以想象一下队列
 先看一段例子，运行下面程序，浏览器执行 http://127.0.0.1:3000/compute 大约每次需要 15657.310ms，也就意味下次用户请求需要等待 15657.310ms，[下文 Node.js 进程创建一节](#fork子进程充分利用CPU资源) 将采用 child_process.fork 实现多个进程来处理。
 
 ```js
-// compute.js
+// 2_create_compute.js
 const http = require('http');
 const [url, port] = ['127.0.0.1', 3000];
 
@@ -241,14 +241,14 @@ execFile(`node`, ['-v'], (error, stdout, stderr) => {
 
 ```js
 const fork = require('child_process').fork;
-fork('./worker.js'); // fork 一个新的子进程
+const child = fork('./6_1_child_process.js'); // fork 一个新的子进程
 ```
 
 #### fork子进程充分利用CPU资源
 
 [上文单线程一节](#单线程) 例子中，当 CPU 计算密度大的情况程序会造成阻塞导致后续请求需要等待，下面采用 child_process.fork 方法，在进行 cpmpute 计算时创建子进程，子进程计算完成通过 send 方法将结果发送给主进程，主进程通过 message 监听到信息后处理并退出。
 
-> fork_app.js
+> 7_fork_app.js
 
 ```js
 const http = require('http');
@@ -256,7 +256,7 @@ const fork = require('child_process').fork;
 
 const server = http.createServer((req, res) => {
     if(req.url == '/compute'){
-        const compute = fork('./fork_compute.js');
+        const compute = fork('./7_1_child_fork_app.js');
         compute.send('开启一个新的子进程');
 
         // 当一个子进程使用 process.send() 发送消息时会触发 'message' 事件
@@ -280,7 +280,7 @@ server.listen(3000, 127.0.0.1, () => {
 });
 ```
 
-> fork_compute.js
+> 7_1_child_fork_app.js
 
 针对 [上文单线程一节](#单线程) 的例子需要进行计算的部分拆分出来单独进行运算。
 
@@ -323,7 +323,7 @@ master.js 主要处理以下逻辑：
 * 主进程在监听到退出消息的时候，先退出子进程在退出主进程
 
 ```js
-// master.js
+// 8_more_process.js
 const fork = require('child_process').fork;
 const cpus = require('os').cpus();
 
@@ -333,7 +333,7 @@ process.title = 'node-master'
 
 const workers = {};
 const createWorker = () => {
-    const worker = fork('worker.js')
+    const worker = fork('./8_1_more_process_child_worker.js')
     worker.on('message', function (message) {
         if (message.act === 'suicide') {
             createWorker();
@@ -380,7 +380,7 @@ worker.js 子进程处理逻辑如下：
 * 监听 uncaughtException 事件，捕获未处理的异常，发送自杀信息由主进程重建进程，子进程在链接关闭之后退出
 
 ```js
-// worker.js
+// 8_1_more_process_child_worker.js
 const http = require('http');
 const server = http.createServer((req, res) => {
 	res.writeHead(200, {
@@ -445,12 +445,12 @@ worker process created, pid: 19283 ppid: 19279
 index.js 文件里的处理逻辑使用 spawn 创建子进程完成了上面的第一步操作。设置 options.detached 为 true 可以使子进程在父进程退出后继续运行（系统层会调用 setsid 方法），参考 [options_detached](http://nodejs.cn/api/child_process.html#child_process_options_detached)，这是第二步操作。options.cwd 指定当前子进程工作目录若不做设置默认继承当前工作目录，这是第三步操作。运行 daemon.unref() 退出父进程，参考 [options.stdio](http://nodejs.cn/api/child_process.html#child_process_options_stdio)，这是第四步操作。
 
 ```js
-// index.js
+// 9_watch_process.js
 const spawn = require('child_process').spawn;
 
 function startDaemon() {
-    const daemon = spawn('node', ['daemon.js'], {
-        cwd: '/usr',
+    const daemon = spawn('node', ['9_1_watch_process.js'], {
+        cwd: './',
         detached : true,
         stdio: 'ignore',
     });
@@ -465,11 +465,12 @@ startDaemon()
 daemon.js 文件里处理逻辑开启一个定时器每 10 秒执行一次，使得这个资源不会退出，同时写入日志到子进程当前工作目录下
 
 ```js
-// /usr/daemon.js
+// 9_1_watch_process.js
 const fs = require('fs');
 const { Console } = require('console');
 
-// custom simple logger
+// 全局的 console 是一个特殊的 Console，其输出发送到 process.stdout 和 process.stderr。 相当于调用：
+// new Console({ stdout: process.stdout, stderr: process.stderr });
 const logger = new Console(fs.createWriteStream('./stdout.log'), fs.createWriteStream('./stderr.log'));
 
 setInterval(function() {
@@ -477,12 +478,10 @@ setInterval(function() {
 }, 1000 * 10);
 ```
 
-[守护进程实现 Node.js 版本 源码地址](https://github.com/Q-Angelo/project-training/tree/master/nodejs/simple-daemon)
-
 **运行测试**
 
 ```bash
-$ node index.js
+$ node 9_watch_process.js
 守护进程开启 父进程 pid: 47608, 守护进程 pid: 47609
 ```
 
@@ -513,11 +512,11 @@ $ node index.js
 父进程创建子进程之后，父进程退出了，但是父进程对应的一个或多个子进程还在运行，这些子进程会被系统的 init 进程收养，对应的进程 ppid 为 1，这就是孤儿进程。通过以下代码示例说明。
 
 ```js
-// master.js
+// 10_Interview2.js
 const fork = require('child_process').fork;
 const server = require('net').createServer();
 server.listen(3000);
-const worker = fork('worker.js');
+const worker = fork('./10_1_Interview2_fork.js');
 
 worker.send('server', server);
 console.log('worker process created, pid: %s ppid: %s', worker.pid, process.pid);
@@ -525,7 +524,7 @@ process.exit(0); // 创建子进程之后，主进程退出，此时创建的 wo
 ```
 
 ```js
-// worker.js
+// 10_1_Interview2_fork.js
 const http = require('http');
 const server = http.createServer((req, res) => {
 	res.end('I am worker, pid: ' + process.pid + ', ppid: ' + process.ppid); // 记录当前工作进程 pid 及父进程 ppid
@@ -542,12 +541,11 @@ process.on('message', function (message, sendHandle) {
 });
 ```
 
-[孤儿进程 示例源码](https://github.com/Q-Angelo/project-training/tree/master/nodejs/orphan-process)
 
 控制台进行测试，输出当前工作进程 pid 和 父进程 ppid
 
 ```bash
-$ node master
+$ node 10_Interview2.js
 worker process created, pid: 32971 ppid: 32970
 ```
 
@@ -569,27 +567,26 @@ I am worker, pid: 32971, ppid: 1
 先看下端口被占用的情况
 
 ```js
-// master.js
+// 11_Interview3.js
 const fork = require('child_process').fork;
 const cpus = require('os').cpus();
 
 for (let i=0; i<cpus.length; i++) {
-    const worker = fork('worker.js');
+    const worker = fork('./11_Interview3_fork.js');
     console.log('worker process created, pid: %s ppid: %s', worker.pid, process.pid);
 }
 ```
 
 ```js
-//worker.js
+// 11_Interview3_fork.js
 const http = require('http');
 http.createServer((req, res) => {
 	res.end('I am worker, pid: ' + process.pid + ', ppid: ' + process.ppid);
 }).listen(3000);
 ```
 
-[多进程端口占用冲突 示例源码](https://github.com/Q-Angelo/project-training/tree/master/nodejs/port-conflict)
 
-以上代码示例，控制台执行 ```node master.js``` 只有一个 worker 可以监听到 3000 端口，其余将会抛出 ``` Error: listen EADDRINUSE :::3000 ``` 错误
+以上代码示例，控制台执行 ```node 11_Interview3.js``` 只有一个 worker 可以监听到 3000 端口，其余将会抛出 ``` Error: listen EADDRINUSE :::3000 ``` 错误
 
 那么多进程模式下怎么实现多端口监听呢？答案还是有的，通过句柄传递 Node.js v0.5.9 版本之后支持进程间可发送句柄功能，怎么发送？如下所示：
 
@@ -605,7 +602,7 @@ subprocess.send(message, sendHandle)
 当父子进程之间建立 IPC 通道之后，通过子进程对象的 send 方法发送消息，第二个参数 sendHandle 就是句柄，可以是 TCP套接字、TCP服务器、UDP套接字等，为了解决上面多进程端口占用问题，我们将主进程的 socket 传递到子进程，修改代码，如下所示：
 
 ```js
-//master.js
+// 12_Interview3.js
 const fork = require('child_process').fork;
 const cpus = require('os').cpus();
 const server = require('net').createServer();
@@ -625,7 +622,7 @@ for (let i=0; i<cpus.length; i++) {
 ```
 
 ```js
-// worker.js
+// 12_Interview3_fork.js
 const http = require('http');
 const server = http.createServer((req, res) => {
 	res.end('I am worker, pid: ' + process.pid + ', ppid: ' + process.ppid);
@@ -643,12 +640,11 @@ process.on('message', function (message, sendHandle) {
 });
 ```
 
-[句柄传递解决多进程端口占用冲突问题 示例源码](https://github.com/Q-Angelo/project-training/tree/master/nodejs/handle-pass)
 
-验证一番，控制台执行 ```node master.js``` 以下结果是我们预期的，多进程端口占用问题已经被解决了。
+验证一番，控制台执行 ```node 12_Interview3.js``` 以下结果是我们预期的，多进程端口占用问题已经被解决了。
 
 ```bash
-$ node master.js
+$ node 12_Interview3.js
 worker process created, pid: 34512 ppid: 34511
 worker process created, pid: 34513 ppid: 34511
 worker process created, pid: 34514 ppid: 34511
@@ -666,21 +662,21 @@ IPC (Inter-process communication) ，即进程间通信技术，由于每个进�
 **看一下 Demo，未使用 IPC 的情况**
 
 ```js
-// pipe.js
+// 13_Interview4_pipe.js
 const spawn = require('child_process').spawn;
-const child = spawn('node', ['worker.js'])
+const child = spawn('node', ['13_Interview4_fock.js'])
 console.log(process.pid, child.pid); // 主进程id3243 子进程3244
 ```
 
 ```js
-// worker.js
+// 13_Interview4_fock.js
 console.log('I am worker, PID: ', process.pid);
 ```
 
-控制台执行 ```node pipe.js```，输出主进程id、子进程id，但是子进程 ```worker.js``` 的信息并没有在控制台打印，原因是新创建的子进程有自己的stdio 流。
+控制台执行 ```node 13_Interview4_pipe.js```，输出主进程id、子进程id，但是子进程 ```13_Interview4_fock.js``` 的信息并没有在控制台打印，原因是新创建的子进程有自己的stdio 流。
 
 ```bash
-$ node pipe.js
+$ node 13_Interview4_pipe.js
 41948 41949
 ```
 
@@ -689,16 +685,15 @@ $ node pipe.js
 修改 pipe.js 让子进程的 stdio 和当前进程的 stdio 之间建立管道链接，还可以通过 spawn() 方法的 stdio 选项建立 IPC 机制，参考   [options.stdio](http://nodejs.cn/api/child_process.html#child_process_options_stdio)
 
 ```js
-// pipe.js
+// 13_Interview4_pipe.js
 const spawn = require('child_process').spawn;
 const child = spawn('node', ['worker.js'])
 child.stdout.pipe(process.stdout);
 console.log(process.pid, child.pid);
 ```
 
-[父子进程 IPC 通信 源码示例](https://github.com/Q-Angelo/project-training/tree/master/nodejs/master-worker-ipc)
 
-再次验证，控制台执行 ```node pipe.js```，worker.js 的信息也打印了出来
+再次验证，控制台执行 ```node 13_Interview4_pipe.js``` 13_Interview4_fock.js 的信息也打印了出来
 
 ```bash
 $ 42473 42474
@@ -747,9 +742,9 @@ $ node execfile
 > 如何让一个 js 文件在 Linux 下成为一个可执行命令程序?
 
 1. 新建 hello.js 文件，头部须加上 ```#!/usr/bin/env node```，表示当前脚本使用 Node.js 进行解析
-2. 赋予文件可执行权限 chmod +x chmod +x /${dir}/hello.js，目录自定义
-3. 在 /usr/local/bin 目录下创建一个软链文件 ```sudo ln -s /${dir}/hello.js /usr/local/bin/hello```，文件名就是我们在终端使用的名字
-4. 终端执行 hello 相当于输入 node hello.js
+2. 赋予文件可执行权限 chmod +x chmod +x /${dir}/14_Interview7_hello.js，目录自定义
+3. 在 /usr/local/bin 目录下创建一个软链文件 ```sudo ln -s /${dir}/14_Interview7_hello.js /usr/local/bin/hello```，文件名就是我们在终端使用的名字
+4. 终端执行 hello 相当于输入 node 14_Interview7_hello.js
 
 ```js
 #!/usr/bin/env node

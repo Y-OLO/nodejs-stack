@@ -222,16 +222,14 @@ TypeError: Console expects a writable stream instance
 logger.trace('测试错误');
 ```
 ```
-Trace: 测试错误
-    at Object.<anonymous> (/Users/qufei/Documents/mycode/Summarize/test/console-test.js:7:8)
-    at Module._compile (module.js:624:30)
-    at Object.Module._extensions..js (module.js:635:10)
-    at Module.load (module.js:545:32)
-    at tryModuleLoad (module.js:508:12)
-    at Function.Module._load (module.js:500:3)
-    at Function.Module.runMain (module.js:665:10)
-    at startup (bootstrap_node.js:201:16)
-    at bootstrap_node.js:626:3
+Trace: 错误信息
+    at Object.<anonymous> (/Users/guofeng/nodejs-stack-learning/Console_Loggre/1_test_Logger.js:7:8)
+    at Module._compile (internal/modules/cjs/loader.js:956:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:973:10)
+    at Module.load (internal/modules/cjs/loader.js:812:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:724:14)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:1025:10)
+    at internal/main/run_main_module.js:17:11
 ```
 
 ### dir显示一个对象的所有属性和方法

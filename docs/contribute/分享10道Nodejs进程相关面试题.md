@@ -58,7 +58,6 @@ process.on('message', function (message, sendHandle) {
 });
 ```
 
-[孤儿进程 示例源码](https://github.com/Q-Angelo/project-training/tree/master/nodejs/orphan-process)
 
 控制台进行测试，输出当前工作进程 pid 和 父进程 ppid
 
@@ -103,7 +102,6 @@ http.createServer((req, res) => {
 }).listen(3000);
 ```
 
-[多进程端口占用冲突 示例源码](https://github.com/Q-Angelo/project-training/tree/master/nodejs/port-conflict)
 
 以上代码示例，控制台执行 ```node master.js``` 只有一个 worker 可以监听到 3000 端口，其余将会抛出 ``` Error: listen EADDRINUSE :::3000 ``` 错误
 
@@ -154,7 +152,6 @@ process.on('message', function (message, sendHandle) {
 });
 ```
 
-[句柄传递解决多进程端口占用冲突问题 示例源码](https://github.com/Q-Angelo/project-training/tree/master/nodejs/handle-pass)
 
 验证一番，控制台执行 ```node master.js``` 以下结果是我们预期的，多进程端口占用问题已经被解决了。
 
@@ -207,7 +204,6 @@ child.stdout.pipe(process.stdout);
 console.log(process.pid, child.pid);
 ```
 
-[父子进程 IPC 通信 源码示例](https://github.com/Q-Angelo/project-training/tree/master/nodejs/master-worker-ipc)
 
 再次验证，控制台执行 ```node pipe.js```，worker.js 的信息也打印了出来
 
@@ -284,7 +280,6 @@ setInterval(function() {
 }, 1000 * 10);
 ```
 
-[守护进程实现 Node.js 版本 源码地址](https://github.com/Q-Angelo/project-training/tree/master/nodejs/simple-daemon)
 
 **运行测试**
 

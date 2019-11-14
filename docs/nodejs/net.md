@@ -140,7 +140,7 @@ const client = net.createConnection({
 
 client.on('connect', () => {
     // 向服务器发送数据
-    client.write('Nodejs 技术栈');
+    client.write('Nodejs 技术栈 TCP');
 
     setTimeout(() => {
         client.write('JavaScript ');
@@ -167,11 +167,7 @@ client.on('close', err => {
 });
 ```
 
-**源码实现地址**
 
-```
-https://github.com/Q-Angelo/project-training/tree/master/nodejs/net/chapter-1-client-server 
-```
 
 ### 客户端与服务端 Demo 测试
 
@@ -180,28 +176,28 @@ https://github.com/Q-Angelo/project-training/tree/master/nodejs/net/chapter-1-cl
 **服务端**
 
 ```
-$ node server.js
+$ node 1_create_tcp_service.js
 服务已开启在 127.0.0.1:3000
 # 第一次
-Nodejs 技术栈
+Nodejs 技术栈 TCP
 JavaScript 
 TypeScript Python Java C PHP ASP.NET 
 # 第二次
-Nodejs 技术栈
+Nodejs 技术栈 TCP
 JavaScript TypeScript Python Java C PHP ASP.NET 
 ```
 
 **客户端**
 
 ```
-$ node client.js
+$ node 2_create_tcp_client.js
 # 第一次
-你好 Nodejs 技术栈
+你好 Nodejs 技术栈 TCP
 你好 JavaScript 
 你好 TypeScript Python Java C PHP ASP.NET 
 
 # 第二次
-你好 Nodejs 技术栈
+你好 Nodejs 技术栈 TCP
 你好 JavaScript TypeScript Python Java C PHP ASP.NET 
 ```
 
@@ -231,7 +227,7 @@ $ node client.js
 client.on('connect', () => {
     client.setNoDelay(true);
     // 向服务器发送数据
-    client.write('Nodejs 技术栈');
+    client.write('Nodejs 技术栈 TCP');
 
     const arr = [
         'JavaScript ',
@@ -253,11 +249,11 @@ client.on('connect', () => {
 })
 ```
 
-控制台执行 node client.js 命令，似乎一切 ok 了没有在出现粘包的情况，但是这种情况仅使用于交互频率很低的场景。
+控制台执行 node 3_packet_splicing_client.js 命令，似乎一切 ok 了没有在出现粘包的情况，但是这种情况仅使用于交互频率很低的场景。
 
 ```
-$ node client.js
-你好 Nodejs 技术栈
+$ node 3_packet_splicing_client.js
+你好 Nodejs 技术栈 TCP
 你好 JavaScript 
 你好 TypeScript 
 你好 Python 
@@ -267,11 +263,7 @@ $ node client.js
 你好 ASP.NET 
 ```
 
-**源码实现地址**
 
-```
-https://github.com/Q-Angelo/project-training/tree/master/nodejs/net/chapter-2-delay
-```
 
 ### 方案二：Nagle 算法
 
@@ -410,7 +402,7 @@ client.on('data', buffer => {
     console.log('客户端链接断开！', err);
 });
 
-client.write(transcoder.encode('0 Nodejs 技术栈'));
+client.write(transcoder.encode('0 Nodejs 技术栈 TCP'));
 
 const arr = [
     '1 JavaScript ',
@@ -496,7 +488,7 @@ server.on('listening', () => {
 
 ```bash
 $ node client.js
-{ serialNumber: 0, bodyLength: 18, body: '0 Nodejs 技术栈' }
+{ serialNumber: 0, bodyLength: 18, body: '0 Nodejs 技术栈 TCP' }
 1 JavaScript 
 2 TypeScript 
 3 Python 
@@ -515,7 +507,5 @@ $ node client.js
 
 以上结果中，setTimeout 函数里我们同一时间先发送多条数据，之后一一返回，同时打印了包消息头定义的包序列号、消息体长度和包消息体，且是一一对应的，上面提的粘包问题也得到了解决。封包/拆包这块是有点复杂的，以上代码也已经尽可能简单的介绍了实现思路，下面给出实现代码地址，可以做为参照自己也可以使用不同的方式去实现
 
-```bash
-https://github.com/Q-Angelo/project-training/tree/master/nodejs/net/chapter-3-package
-```
+
 

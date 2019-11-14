@@ -467,7 +467,6 @@ setInterval(function() {
 }, 1000 * 10);
 ```
 
-[守护进程实现 Node.js 版本 源码地址](https://github.com/Q-Angelo/project-training/tree/master/nodejs/simple-daemon)
 
 **运行测试**
 
