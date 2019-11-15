@@ -101,7 +101,7 @@ function Server(options, connectionListener) {
 util.inherits(Server, EventEmitter);
 ```
 
-观察上面两个 Node.js 模块的自定义 EventEmitter 实现，都有一个共同点使用了 util.inherits(constructor, superConstructor) 方法，这个是 Node.js 中的工具类，这让我想起来了之前在看 JavaScript 权威指南（第 6 章 122 页）中的一个方法 function inherit(p)，意思为**通过原型继承创建一个新对象**，而 util.inherits 是**通过原型复制来实现的对象间的继承**。
+观察上面两个 Node.js 模块的自定义 EventEmitter 实现，都有一个共同点使用了 util.inherits(constructor, superConstructor) 方法，这个是 Node.js 中的工具类，JavaScript中的一个方法 function inherit(p)，意思为**通过原型继承创建一个新对象**，而 util.inherits 是**通过原型复制来实现的对象间的继承**。
 
 例如上面的 util.inherits(Server, EventEmitter) 函数，也就是 **Server 对象继承了 EventEmitter 在原型中定义的函数**，也就拥有了 EventEmitter 事件触发器中的 on、emit 等方法。但是现在 Node.js 官网不建议使用 util.inherits() 方法，而是使用 ES6 中的 class 和 extends 关键词获得语言层面的继承支持，那么在原声 JS 中还是使用 Object.setPrototypeOf() 来实现的继承，因此在 Node.js 12x 版本中你会看到如下代码实现。
 
