@@ -179,6 +179,63 @@ console.log(buf.toString('UTF-8', 0, 11)); // Node.js 技
 
 可以看到已经正常输出了
 
+**Buffer中常见使用方法**
+> 写入缓冲区 buf.write(string[, offset[, length]][, encoding])
+
+- string - 写入缓冲区的字符串。
+- offset - 缓冲区开始写入的索引值，默认为 0 。
+- length - 写入的字节数，默认为 buffer.length
+- encoding - 使用的编码。默认为 'utf8' 。
+
+
+```js
+buf = Buffer.alloc(256);
+len = buf.write("http://nodejs.cn/api/buffer.html");
+
+console.log("写入字节数 : "+  len);
+// 写入字节数 : 32
+```
+
+> 拷贝缓冲区 buf.copy(targetBuffer[, targetStart[, sourceStart[, sourceEnd]]])
+
+- targetBuffer - 要拷贝的 Buffer 对象。
+- targetStart - 数字, 可选, 默认: 0
+- sourceStart - 数字, 可选, 默认: 0
+- sourceEnd - 数字, 可选, 默认: buffer.length
+
+```js
+var buf1 = Buffer.from('abcdefghijkl');
+var buf2 = Buffer.from('RUNOOB');
+//将 buf2 插入到 buf1 指定位置上
+buf2.copy(buf1, 2);
+console.log(buf1.toString());
+// abRUNOOBijkl
+```
+> 缓冲区裁剪 buf.slice([start[, end]])
+
+- start - 数字, 可选, 默认: 0
+- end - 数字, 可选, 默认: buffer.length
+
+```js
+var buffer1 = Buffer.from('runoob');
+// 剪切缓冲区
+var buffer2 = buffer1.slice(0,2);
+console.log("buffer2 content: " + buffer2.toString());
+// buffer2 content: ru
+```
+
+> 缓冲区合并  Buffer.concat(list[, totalLength])
+
+- list - 用于合并的 Buffer 对象数组列表。
+- totalLength - 指定合并后Buffer对象的总长度。
+```js
+var buffer1 = Buffer.from(('Buffer合并'));
+var buffer2 = Buffer.from(('http://nodejs.cn/api/buffer.html'));
+var buffer3 = Buffer.concat([buffer1,buffer2]);
+console.log("buffer3 内容: " + buffer3.toString());
+// buffer3 内容: Buffer合并http://nodejs.cn/api/buffer.html
+```
+
 
 ## Buffer内存机制
 
