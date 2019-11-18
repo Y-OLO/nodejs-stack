@@ -294,7 +294,7 @@ process.stdout.write('hello world!' + '\n');
 
 > 为什么 console.log() 执行完后就退出?
 
-这个问题第一次看到是来自于朴灵大神的一次演讲，涉及到 EventLoop 的执行机制，一旦产生事件循环，就会产生一个 While(true) 的死循环，例如定时器 setInterval，但是 console.log 它没有产生 watch、handlers 在事件循环中执行了一次就退出了。同时另一个疑问开启一个 http server 为什么进程没有退出？参考下文章 [Node.js 为什么进程没有 exit？](https://mp.weixin.qq.com/s/r7qH147-88bd2Be5Guxd8w)。
+这个问题第一次看到是来自于朴灵大神的一次演讲，涉及到 EventLoop 的执行机制，一旦产生事件循环，就会产生一个 While(true) 的死循环，例如定时器 setInterval，但是 console.log 它没有产生 watch、handlers 在事件循环中执行了一次就退出了。
 
 ## Reference
 
