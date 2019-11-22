@@ -1,6 +1,6 @@
 ## 数据库关系
 
-### 什么是关系？
+## 什么是关系？
 关系可以帮助你轻松地与相关实体合作。 有几种类型的关系：
 * [一对一](#一对一) 使用 @OneToOne
 * [多对一](#多对一-一对多) 使用 @ManyToOne
@@ -16,7 +16,7 @@
 |primary| boolean - 指示此关系的列是否为主列。|
 |nullable| boolean -指示此关系的列是否可为空。 默认情况下是可空。|
 
-#### 一对一
+## 一对一
 > @OneToOne
 
 一对一是一种 A 只包含一个 B 实例，而 B 只包含一个 A 实例的关系。我们以User和Profile实体为例。用户只能拥有一个配置文件，并且一个配置文件仅由一个用户拥有。
@@ -84,7 +84,7 @@ const users = await userRepository.find({ relations: ["profile"] });
     .getMany();
 ```
 
-#### 多对一 / 一对多
+## 多对一 / 一对多
 > @ManyToOne / @OneToMany
 
 多对一/一对多是指 A 包含多个 B 实例的关系，但 B 只包含一个 A 实例。 让我们以User 和 Photo 实体为例。 User 可以拥有多张 photos，但每张 photo 仅由一位 user 拥有。
@@ -144,7 +144,7 @@ await connection.manager.save(user);
 ```
 
 
-#### 多对多
+## 多对多
 > @ManyToMany
 
 多对多是一种 A 包含多个 B 实例，而 B 包含多个 A 实例的关系。 我们以Question 和 Category 实体为例。 Question 可以有多个 categories, 每个 category 可以有多个 questions。
@@ -202,7 +202,7 @@ await connection.manager.save(question);
 
 
 
-### 级联
+## 级联
 
 > cascade: true
 
@@ -263,7 +263,7 @@ export class Question {
 
 
 
-### @JoinColumn选项
+## @JoinColumn选项
 `@JoinColumn`不仅定义了关系的哪一侧包含带有外键的连接列，还允许自定义连接列名和引用的列名。设置@JoinColumn的哪一方，哪一方的表将包含一个"relation id"和目标实体表的外键。
 `@JoinColumn`必须仅设置在关系的一侧且必须在数据库表中具有外键的一侧。
 当我们设置`@JoinColumn`时，它会自动在数据库中创建一个名为`propertyName + referencedColumnName`的列
@@ -283,7 +283,7 @@ category: Category;
 > @JoinColumn({ referencedColumnName: "name" })
 
 
-### @JoinTable选项
+## @JoinTable选项
 `@JoinTable`用于“多对多”关系，并描述联结表的连接列。 联结表是由 TypeORM 自动创建的一个特殊的单独表，其中的列引用相关实体。 你可以使用@JoinColumn更改联结表及其引用列中的列名
 ```js
 @ManyToMany(type => Category)
