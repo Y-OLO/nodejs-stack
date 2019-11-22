@@ -53,3 +53,9 @@
 
 * Nest.js 基础
     - [基础](/nodejs/Nest.md)
+* TypeOrm 基础
+    - [TypeOrm 简单入门](/typeorm/typeorm.md)
+    - [建立连接](/typeorm/Connection.md)
+    - [实体](/typeorm/Entity.md)
+    - [数据库关系](/typeorm/Relationships.md)
+    - [Entity Manager 和 Repository](/typeorm/EntityManagerRepository.md)
