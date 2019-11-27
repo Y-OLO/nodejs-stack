@@ -62,7 +62,8 @@
     - [Entity Manager 和 Repository](/typeorm/EntityManagerRepository.md)
 
 * CSS3 基础
-  -[弹性盒子模型](/css/FlexibleBox.md)
+  - [弹性盒子模型](/css/FlexibleBox.md)
 
 * 一些常用配置
-  -[基于tslint格式化代码](/nodejs/tslint.md)
+  - [基于tslint格式化代码](/nodejs/tslint.md)
+  - [提高页面加载速度](/vuecli/build.md)
