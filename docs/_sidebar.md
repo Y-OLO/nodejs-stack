@@ -8,7 +8,8 @@
  -->
 * Introduction
     * [简介](README.md)
-
+* TypeScript
+    * [基础](/typescript/index.md)
 * JavaScript
     * [基础](/javascript/base.md)
     * [This](/javascript/this.md)
